@@ -96,3 +96,6 @@ TEMPLATE_DIRS =(TEMPLATE_PATH,)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
+#for the view -- login_required
+LOGIN_URL = '/rango/login/'
+
