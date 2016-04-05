@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 
 def index(request):
+	request.session.set_test_cookie()
 	context_dict = {}
 	#query the Category table order by likes in descending order.
 	#retrieve the top 5 only
@@ -82,6 +83,9 @@ def add_page(request, category_name_slug):
 	return render(request, 'rango/add_page.html',context_dict)
 
 def register(request):
+	if request.session.test_cookie_worked():
+		print ">>> TEST COOKIE WORKED!"
+		request.session.delete_test_cookie()
 	registered = False
 	if request.method == 'POST':
 		user_form = UserForm(data=request.POST)
