@@ -11,6 +11,7 @@ from rango.forms import UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from django.shortcuts import redirect
 
 def index(request):
 	request.session.set_test_cookie()
@@ -35,16 +36,28 @@ def about(request):
 def category(request, category_name_slug):
 	#Create a context dictionary which we can pass to the template rendering engine.
 	context_dict = {}
+	context_dict['result_list']=None
+	context_dict['query']=None
+	name_slug = category_name_slug
+	if request.method == 'POST':
+		query = request.POST['query'].strip()
+		if query:
+			name_slug = query
 	try:
-		category = Category.objects.get(slug=category_name_slug)
+		category = Category.objects.get(slug=name_slug)
 		context_dict['category_name']=category.name
-		pages = Page.objects.filter(category=category)
+		pages = Page.objects.filter(category=category).order_by('-views')
 		#context_dict['pages_title'] = pages.title
 		context_dict['pages'] = pages
 		context_dict['category']=category
-		context_dict['category_name_slug']=category_name_slug
+		context_dict['category_name_slug']=name_slug
+		context_dict['result_list'] = pages
+		context_dict['query'] = name_slug
+
 	except Category.DoesNotExist:
 		pass
+	if not context_dict['query']:
+		context_dict['query'] = name_slug
 	return render(request, 'rango/category.html',context_dict)
 
 def add_category(request):
@@ -138,3 +151,18 @@ def restricted(request):
 def user_logout(request):
 	logout(request)
 	return HttpResponseRedirect('/rango/')
+
+def track_url(request):
+	page_id =None
+	url = '/rango/'
+	if request.method == 'GET':
+		if 'page_id' in request.GET:
+			page_id = request.GET['page_id']
+			try:
+				page = Page.objects.get(id=page_id)
+				page.views = page.views + 1
+				page.save()
+				url = page.url 
+			except:
+				pass
+	return redirect(url)
