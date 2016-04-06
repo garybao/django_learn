@@ -3,10 +3,14 @@
 {% block title %} About {% endblock %}
 
 {% block body_block %}
+	<div class="page-header">
 		<h1>Rango says..</h1>
+	</div>
+	<div>
 		This is about the world! <strong>{{boldmessage}}</strong><br />
 		<a href="{% url 'index' %}">Index</a><br />
 		<img src="{% static "images/2.jpg" %}" alt="Picture of Chairs" /> <!-- New line -->
+	</div>
 {% endblock %}
 
 </html>
