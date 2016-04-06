@@ -1,15 +1,12 @@
-<!DOCTYPE html>
-{% load static %} <!-- New line -->
-<html>
-	<head>
-		<title>Rango</title>
-	</head>
+{%extends 'base.html'%}
+{% load staticfiles %} <!-- New line -->
+{% block title %} About {% endblock %}
 
-	<body>
+{% block body_block %}
 		<h1>Rango says..</h1>
 		This is about the world! <strong>{{boldmessage}}</strong><br />
-		<a href="/rango/">Index</a><br />
+		<a href="{% url 'index' %}">Index</a><br />
 		<img src="{% static "images/2.jpg" %}" alt="Picture of Chairs" /> <!-- New line -->
-	</body>
+{% endblock %}
 
 </html>
